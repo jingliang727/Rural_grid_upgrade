@@ -1,0 +1,288 @@
+
+global policy policy_support_relocation policy_support_industrial_development policy_support_ecological_compensation policy_support_education_training policy_support_social_security
+
+global length_road length_motorway length_highway length_regularrailway length_highspeedraiway
+
+*Table 1 The impact of rural grid upgrade on income*
+
+* 1 DD *
+
+xtreg Inc grid_upgrade i.year $policy $length_road   , fe vce(cl town)
+
+* 2 DD IV *
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road   ,fe vce(cl town)
+
+* 3 PSM DD *
+
+psmatch2 grid_upgrade altitude_avg altitude_sd altitude_cv sur_relief slope_avg slope_avg_weighted , outcome(Inc) logit neighbor(2) cal(0.03) ties common 
+
+xtreg Inc grid_upgrade i.year $policy $length_road  if _support==1   , fe vce(cl town)
+
+* 4 PSM IV *
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road  if _support==1 ,fe vce(cl town)
+
+
+*Table 2 The dynamics of the impact of rural grid upgrade on income*
+
+*Panel A - Underwent upgrades one year*
+
+xtreg  Inc grid_upgrade  i.year $policy $length_road  if  reloc_one_year==1   ,fe vce(cl town_id)
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if  reloc_one_year==1  ,fe vce(cl town)
+
+*Panel B - Underwent upgrades two years*
+
+xtreg  Inc grid_upgrade  i.year $policy $length_road  if  reloc_two_year==1   ,fe vce(cl town_id)
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if  reloc_two_year==1  ,fe vce(cl town)
+
+*Panel C - Underwent upgrades three years*
+
+xtreg  Inc grid_upgrade  i.year $policy $length_road  if  reloc_three_year==1   ,fe vce(cl town_id)
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if  reloc_three_year==1  ,fe vce(cl town)
+
+*Table 3 The heterogeneous impacts of rural grid upgrades on income *
+
+* 1 Altitude *
+
+xtivreg Inc   ( grid_upgrade*alti_avg_low grid_upgrade*alti_avg_high =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+* 2 Slope *
+
+xtivreg Inc   ( grid_upgrade*slope_avg_lowest grid_upgrade*slope_avg_highest =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+* 3 Electricity Consumption *
+
+xtivreg Inc   ( grid_upgrade*consumption_lowest grid_upgrade*consumption_highest =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+*4 Investment Per Square Meter*
+
+xtivreg Inc   ( grid_upgrade*investment_lowest grid_upgrade*investment_highest =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+*5 Agricultural Workers*
+
+xtivreg Inc   ( grid_upgrade*agri_lowest grid_upgrade*agri_middle grid_upgrade*agri_highest =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+*6 Manufacturing Workers*
+
+xtivreg Inc   ( grid_upgrade*manu_lowest grid_upgrade*manu_middle grid_upgrade*agri_highest =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+
+*7 Other Workers*
+
+xtivreg Inc   ( grid_upgrade*other_lowest grid_upgrade*other_middle grid_upgrade*other_highest =num_transformer num_10kV_aerial_cable num_1kV_aerial_cable)   i.year $policy $length_road ,fe vce(cl town)
+
+*Table 4 The impact of rural grid upgrade on other outcome variables*
+
+*Panel A Overall Development*
+
+xtivreg  night_time_light (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*Panel B Mechanism*
+
+xtivreg  num_enterprise_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+xtivreg  num_enterprise_10km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*Table 5 The impact of rural grid upgrade on enterprise and public institutions*
+
+*1 Number of Agricultural Enterprises in 5km*
+
+xtivreg  num_agri_enterprise_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*2 Number of Manufacturing Enterprises in 5km*
+
+xtivreg  num_manu_enterprise_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*3 Number of Wholesale and Retail Enterprises in 5km*
+
+xtivreg  num_sale_enterprise_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*4 Number of Primary Schools in 5km*
+
+xtivreg  num_primary_school_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*5 Number of Kindergartens in 5km*
+
+xtivreg  num_kindergarten_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*6 Number of Medical Institutions in 5km*
+
+xtivreg  num_medical_5km (grid_upgrade =   num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year $policy $length_road  ,fe vce(cl town)
+
+*Table A1 Construction of policy control variables*
+
+bysort year:sum policy_support_relocation
+
+bysort year:sum policy_support_industrial_development
+
+bysort year:sum policy_support_ecological_compensation
+
+bysort year:sum policy_support_education_training
+
+bysort year:sum policy_support_social_security
+
+*Table A2*
+
+ttest altitude_avg if year==2015, by(Winner_group)
+
+reg altitude_avg Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest altitude_sd if year==2015, by(Winner_group)
+
+reg altitude_sd Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest altitude_cv if year==2015, by(Winner_group)
+
+reg altitude_cv Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest sur_relief if year==2015, by(Winner_group)
+
+reg sur_relief Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest slope_avg if year==2015, by(Winner_group)
+
+reg slope_avg Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest slope_avg_weighted if year==2015, by(Winner_group)
+
+reg slope_avg_weighted Winner_group i.town if year==2015 ,vce(cl town)
+
+
+ttest Inc if year==2015, by(Winner_group)
+
+reg Inc Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest num_enterprise_5km if year==2015, by(Winner_group)
+
+reg num_enterprise_5km Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest num_enterprise_10km if year==2015, by(Winner_group)
+
+reg num_enterprise_10km Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest night_time_light if year==2015, by(Winner_group)
+
+reg night_time_light Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest length_highspeedraiway if year==2015, by(Winner_group)
+
+reg length_highspeedraiway Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest length_highway if year==2015, by(Winner_group)
+
+reg length_highway Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest length_motorway if year==2015, by(Winner_group)
+
+reg length_motorway Winner_group i.town if year==2015 ,vce(cl town)
+
+ttest length_localroad if year==2015, by(Winner_group)
+
+reg length_localroad Winner_group i.town if year==2015 ,vce(cl town)
+
+*Table A3 The IV results of the impact of rural grid upgrade on income*
+
+*IV first stage*
+
+xtreg grid_upgrade num_transformer num_10kV_aerial_cable num_1kV_aerial_cable i.year $policy $length_road   , fe vce(cl town)
+
+*IV second stage*
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road   ,fe vce(cl town)
+
+*OLS*
+
+xtreg Inc grid_upgrade i.year $policy $length_road   , fe vce(cl town)
+
+*Table A4 The results of IV first stage in details*
+
+*IV first stage-1*
+
+xtreg grid_upgrade num_transformer num_10kV_aerial_cable num_1kV_aerial_cable i.year $policy $length_road   , fe vce(cl town)
+
+*IV first stage-2*
+
+xtreg grid_upgrade num_transformer   i.year $policy $length_road   , fe vce(cl town)
+
+*IV first stage-3*
+
+xtreg grid_upgrade  num_10kV_aerial_cable  i.year $policy $length_road   , fe vce(cl town)
+
+*IV first stage-4*
+
+xtreg grid_upgrade  num_1kV_aerial_cable  i.year $policy $length_road   , fe vce(cl town)
+
+*Table A5 The PSM results of rural grid upgrade on income*
+
+psmatch2 grid_upgrade altitude_avg altitude_sd altitude_cv sur_relief slope_avg slope_avg_weighted , outcome(Inc) logit neighbor(2) cal(0.03) ties common 
+
+*1 PSM DD*
+
+xtreg Inc grid_upgrade i.year $policy $length_road  if _support==1   , fe vce(cl town)
+
+* 2 PSM IV *
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road  if _support==1 ,fe vce(cl town)
+
+*Covariate Balance*
+
+psmatch2 grid_upgrade altitude_avg altitude_sd altitude_cv sur_relief slope_avg slope_avg_weighted , outcome(Inc) logit neighbor(2) cal(0.03) ties common 
+
+pstest, both graph legend(off)
+
+*Table A6 The pseudo treatment effect: no spillover*
+
+* 1 DD *
+
+xtreg Inc grid_upgrade i.year $policy $length_road   , fe vce(cl town)
+
+* 2 DD IV *
+
+xtivreg  Inc (grid_upgrade =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road   ,fe vce(cl town)
+
+*3 Pseudo DD*
+
+xtreg Inc grid_upgrade_control i.year $policy $length_road  if Control==1  , fe vce(cl town)
+
+*4 Pseudo IV*
+
+xtivreg  Inc (grid_upgrade_control =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if Control==1  ,fe vce(cl town)
+
+*Table A7*
+
+*Panel A*
+
+xtreg Inc grid_upgrade_control_2016 i.year $policy $length_road  if Control==1 & (year==2015|year==2016)  , fe vce(cl town)
+
+xtivreg  Inc (grid_upgrade_control_2016 =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if Control==1 & (year==2015|year==2016) ,fe vce(cl town)
+
+
+*Panel B*
+
+xtreg Inc grid_upgrade_control_2017 i.year $policy $length_road  if Control==1 & (year==2015|year==2017)  , fe vce(cl town)
+
+xtivreg  Inc (grid_upgrade_control_2017 =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if Control==1 & (year==2015|year==2017) ,fe vce(cl town)
+
+*Panel C*
+
+xtreg Inc grid_upgrade_control_2018 i.year $policy $length_road  if Control==1 & (year==2015|year==2018)  , fe vce(cl town)
+
+xtivreg  Inc (grid_upgrade_control_2018 =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if Control==1 & (year==2015|year==2018) ,fe vce(cl town)
+
+
+*Panel D*
+
+xtreg Inc grid_upgrade_control_2018 i.year $policy $length_road  if Control==1 & (year==2015|year==2019)  , fe vce(cl town)
+
+xtivreg  Inc (grid_upgrade_control_2018 =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if Control==1 & (year==2015|year==2019) ,fe vce(cl town)
+
+*Panel E*
+
+xtreg Inc grid_upgrade_control_2018 i.year $policy $length_road  if Control==1 & (year==2015|year==2020)  , fe vce(cl town)
+
+xtivreg  Inc (grid_upgrade_control_2018 =  num_transformer num_10kV_aerial_cable num_1kV_aerial_cable  ) i.year  $policy $length_road if Control==1 & (year==2015|year==2020) ,fe vce(cl town)
+
